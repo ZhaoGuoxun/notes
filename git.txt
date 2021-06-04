@@ -1,0 +1,13 @@
+git:
+1.与svn的对比：
+	svn: 集中式版本管理工具
+	git：分布式版本控制系统，没有中央服务器，每个人的电脑就是一个完整的版本库
+2.tortoiseGit 或者 git
+3.初始化git
+	1.git GUI
+	2.bash： git init
+3.创建远程仓库
+	1.生成秘钥对  ssh-keygen -t rsa
+	2.在github上添加ssh-key
+	3.建立连接： git remote add origin git@github.com:ZhaoGuoxun/repo1.git
+	

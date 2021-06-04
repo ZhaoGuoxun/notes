@@ -1,0 +1,177 @@
+NodeJS
+
+一：优势
+	1.性能 nodejs是php性能的86倍
+	2.跟前台JS配合方便  
+	
+
+笔记
+1.http请求里  header里大小<32K   body <1G
+	post数据 是分段发送的
+	express框架： get请求从req.query里取， post请求从req.body里去
+2.有用的模块
+	Crypto 加密
+	Events 事件
+	Net 网络操作（邮件）
+	OS 操作系统信息
+	Path 处理文件路径
+	Stream 流操作
+	Timers 定时器
+	ZLIB 压缩
+3.自定义模块
+	1. '*.js'可以省略.js
+	2.自定义模块放到node_modules里面
+		系统模块比自定义模块优先级高
+4.npm NodeJS Package Manager(NodeJS包管理器)
+	publish unpublish login
+	npm install; npm uninstall; npm list; npm info md5;
+	^表示第一位版本号不变; ~表示前两位不变; *表示全部可变;
+5.http-无状态的
+	cookie、session	
+	cookie: 在浏览器保存一些数据，每次请求都会带过来
+		*不安全、有限（4K）
+	session: 保存数据，保存在服务端
+		*安全、无限
+	session是基于cookie实现的
+		*cookie中会有一个session的ID 服务器利用sessionID找到session文件、读取、写入
+		隐患： session劫持
+	express中的cookie、session操作：
+		借助中间件：cookie-parser、cookie-session
+		cookie：赋值： res.cookie(名字, 值, {path: '/', maxAge: 毫秒, signed: true});
+				取取： console.log(req.cookies);  console.log(req.signedCookies);
+				删除： res.clearCookie('user');
+		session：赋值：req.session['user'] = 'zzh';
+				 取值：console.log(req.session['user']);
+				 删除： delete req.session['user'];		
+6.模板引擎：
+	jade 侵入式的
+	ejs 温和的，保留的
+7.文件上传 引入multer模块
+	用法：var objMuter = multer({dest: './www/upload/'});
+		  server.use(objMuter.any());   objMuter.single() //指定名称的文件
+		  查看：req.files
+8.consolidate 模板引擎适配
+	server.set('view engine', 'html');
+	server.set('views', '模板文件目录');
+	server.engine('html', consolidate.ejs);
+	server.get('/', function(req, res) {
+		res.render('模板文件', '数据');
+	}
+9.node的mysql模块是一个js写的客户端
+	var db = mysql.createConnection({
+		host: 'localhost', port: '3306', user: 'root', password: '123456', database: 'project'
+	})
+	db.query();
+10.SQL 增删改查
+增--INSERT
+	INSERT  INTO 表 （字段列表） VALUES(值列表)
+	INSERT INTO `user` (`id`, `username`, `password`) VALUES(0, 'blue', '987654');
+删--DELETE
+	DELETE FROM 表 WHERE 条件
+改--UPDATE
+	UPDATE 表 SET　字段=值 WHERE 条件	
+查--SELECT
+	SELECT 什么 FROM 表
+	SELECT * FROM `user`
+``解决Node.js mysql客户端不支持认证协议引发的“ER_NOT_SUPPORTED_AUTH_MODE”问题
+	导致这个错误的原因是，目前，最新的mysql模块并未完全支持MySQL 8的“caching_sha2_password”加密方式，而“caching_sha2_password”在MySQL 8中是默认的加密方式。因此，下面的方式命令是默认已经使用了“caching_sha2_password”加密方式，该账号、密码无法在mysql模块中使用。
+	解决方法是从新修改用户root的密码，并指定mysql模块能够支持的加密方式：ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '123456';
+11.SQL语句的顺序：
+	WHERE 	GROUP BY	ORDER 	LIMIT
+
+CommonJS:
+	1.commonjs就是模块化的标准，nodejs就是commonjs（模块化）的实现。	
+	2.两种导出方式exports.get = 'get';  module.exports = get;  			//module.exports 一般用于导出全部
+	3.导入默认去找index.js，可以生成一个package.json，在里面配置入口文件。
+12.fs模块
+	stat mkdir writeFile appenFile readfile readdir rename unlink rmdir
+	createReadStream  createWriteStream  readStream.pipe(writeStream)
+13.第三方模块
+	format-date-time   mkdirp
+14.获取请求的数据
+	get:  let urlInfo = url.parse(req.url, true);	urlInfo.query//{name: 'zgx', age: 12}
+	post: req.on('data', (chunk) => {})		req.on('end', () => {});
+15.body-parser获取post数据
+	// parse application/x-www-form-urlencoded
+	app.use(bodyParser.urlencoded({ extended: false }))	 
+	// parse application/json
+	app.use(bodyParser.json())
+16.cookie-parser解析cookie数据
+	options: path maxAge domain signed
+
+Express
+	1.express脚手架: express-generator
+		express --view=ejs /myApp
+		npm install
+		npm start.js
+
+KOA:
+	npm install koa koa-router --save
+	1.获取get传值
+		ctx.query 	==>  {name: 'zgx'}
+		ctx.querystring  ==>  name=zgx
+		ctx.request.query  ctx.request.querystring  ctx.request.url
+	2.动态路由
+		app.get('/:aid/:cid')
+		ctx.params
+	3.中间件
+		应用级中间件、路由级中间件、错误处理中间件、第三方中间件
+	4.脚手架
+		koa-generator
+		koa koa-demo
+
+
+
+采坑记录：
+1.readFile 是在回调里写处理函数   readFileSync 没有回调函数
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,9 @@
+cordova学习笔记：
+	安装cordova-cli：npm install -g cordova
+	安装JDK
+	安装Android SDK 
+构建项目
+	cordova create hello com.example.hello HelloWorld
+	cd hello
+	cordova platform add android
+	cordova build

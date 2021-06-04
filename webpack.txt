@@ -1,0 +1,148 @@
+1.webpack定位： 模块打包工具 module bundler
+	可以识别出任务一种模块导入的语法，比如common.js  require
+	一开始webpack 只是一个js的模块打包工具，后来可以打包css，图片文件等等
+	
+	--save 和 --save-dev 的区别
+	--save 保存在dependencies里，运行时的依赖，发布后，即生产环境下还需要用的模块。
+	--save-dev 保存在devDependencies中，仅开发环境需要，发布时用不到它。
+
+2.webpack环境搭建
+	1.package.json文件配置
+		private: true	//表示不会发布到线上
+		license: 'MIT'  //开源协议
+	2.webpack.config.js
+		mode: 'development'//production(默认)  打包后的代码不一样  一个是压缩过的 一个不是
+		优化：新建一个webpack.common.js  和 dev.js prod.js  采用第三方包 webpack-merge 合并配置文件
+	3.配置devtool: 'none'
+		none: 不显示报错源文件的信息  
+		source-map: 显示源文件保存位置并生成一个map文件  
+		inline-source-map：不会生成map文件，直接写到文件里面
+		cheep-inline-source-map: 只显示报错行信息，不显示列信息
+		cheep-module-source-map: 不仅显示源文件的报错信息，还显示第三方模块的报错信息
+		推荐使用： 开发模式下: cheap-module-eval-source-map  线上模式：cheap-module-source-map
+	4.webpackDevServer  实现热部署的三种方式
+		1.package.json  scripts里使用webpack --watch 监听代码改变自动打包 
+		2.安装webpack-dev-server 配置webpack.config.js devServer: { contentBase: './dist', open: true }
+			//安装webpack-dev-server后打包一直报错 Cannot find module 'webpack/bin/config-yargs'
+			//原因：webpack4.x版本与webpack-dev-server的版本不兼容，更新到指定版本webpack-dev-server@3.8.2
+		3.自己写一个服务器，监听文件变化刷新网站
+			//node server.js  express webpack-dev-middleware
+		//热部署之后 dist下不再有文件打包生成，文件都放到了内存中
+	5.hot module replacement 修改代码后不重新刷新浏览器，立即生效
+		配置: devServer: hot: true, hotOnly: true(即使hotmap不生效，也不刷新浏览器)
+	6.配置babel  es6 -> es5  参考babeljs.io的官网
+		业务发开时：需要的包  babel-loader @babel/core @babel/preset-env @babel/polyfill
+		类库开发时：使用runtime-transform 不会污染全局变量，会使用闭包的形式    用法参考官网usage transform-runtime
+		babel配置文件可以放到.babelrc文件中，因为可能会很长
+	7.Tree Shaking  //把一棵树上不需要的东西摇晃掉，只保留我在引入模块时引入的东西  webpack2.0+
+		//只支持ES module模块的引入
+		开发环境下：1.配置里增加: optimization: { usedExports: true }
+					2.package.json 里sideEffects: ["@babel/polyfill"] 配置不需要tree shaking的文件
+					
+
+其他技术					
+1.css模块化
+	css-loader里配置modules: true开启模块化  import style from './App.css';   <h1 className={style.title}>Hello World</h1>  使用一个独一无二的class的名字，不会与其他选择器重名
+2.code spliting 
+	引入包lodash，提供了很多高效的方法,eg: join(['a',b',''c'], '**') => a**b**c
+	1.同步代码： webpack4.0之前需要利用缓存进行代码分割，webpack4.0之后配置: optimization: {splitChunks: {chunks: all}}
+	2.异步代码： 指用import('lodash').then() 语法导入的，无需做任何配置，会自动进行代码分割
+	webpack自带的代码分割配置参数详解：
+		chunks: 'async', //all initial  表示对同步代码，异步代码分割还是对所有引入的代码进行分割，
+		minSize: 10000,	//大于10Kb才会进行分割打包
+		minChunks: 2,	//用的次数如果少于2次就不会进行分割
+		maxAsyncRequests: 5,		//异步的请求的个数如果超过5个就不会再分割打包了
+		maxInitialRequests: 3, 		//最大同步请求的分割打包个数
+		cacheGroups: {
+			vendors: {
+				test: /[\\/]node_modules[\\/]/,	//如果是node_modules引入的，分割打包到一个文件里
+				priority: -10,
+				filename: 'vendor.js',
+			},
+			default: {
+				priority: -20,
+				reuseExistingChunk: true,	///a模块用了b模块，会重复利用已打包的模块
+				filename: 'common.js'
+			},
+		}
+3.css code-spliting  MiniCssExtractPlugin  --适合在线上环境打包引入 
+	配置css的loader用minicss提供的，而不是style-loader（会将css放到js中）
+	**：如果没有生成的话，可能是被treeshaking 给过滤掉了，配置sideEffects: [*.css]来阻止css的treeshaking
+	optimize-css-assets-webpack-plugin  借助插件对代码进行压缩合并
+4.shimming  垫片
+	new webpack.ProvidePlugin({
+		$: 'jquery'，
+		_join: ['lodash', 'join'],	//自定义垫片，表示lodash里的join方法
+	})
+	webpack发现你在模块里引用了$，会自动引入jquery包，并赋值给$
+5.模块里的this默认不是指向window的，如果需要实现，借助imports-loader
+	use: [{loader: 'imports-loader?this=>window'}]
+6.webpack打包里的全局变量  webpack --env.production --config ./webpack.common.js
+  module.exports => (env) => {
+	if(env && env.production) {
+		return merge(commonConfig, prodConfig);
+	} else {
+		return merge(commonConfig, devConfig);
+	}
+  }
+7.library库打包
+8.progressive web application
+  如果你打开了一个页面，服务器挂了，pwa会缓存一份数据，再次请求会展示缓存的页面，而不是无法连接到服务器
+  安装google提供的插件 workbox-webpack-plugin 
+  在线上环境配置plugins 
+	new WorkboxPlugin.GenerateSW({
+		clientsClaim: true,
+		skipWaiting: true
+	})
+9.webpack打包typescript
+	规范js代码的书写，如果未按照格式，提示错误
+	安装ts-loader, typescript , 配置tsconfig.json , @types/lodash(提示lodash参数引用 类型文件)  @types/jquery
+10.开发过程中请求的转发
+	配置 devserver 里的	proxy， 可以很方便的实现开发线上环境的接口调试
+	proxy: {
+		'/react/api': {
+			target: 'http://www.dell-lee.com',
+			secure: false,	//如果是https
+			pathRewrite: {
+				'header.json': 'demo.json'
+			}
+		}
+	}
+11.单页面路由：
+	在devServer里配置historyApiFallback: true 表示请求的地址如果找不到，就返回到根页面
+	也可以配置： 
+		rewrites: [{
+			from: /abc.html/,
+			to: 'index.html',		to里也可以是回调 function(context) { return context.baseUrl }
+		}]
+12.ESLint  代码规范
+	安装 npm install eslint --save-dev 
+	初始化  npx eslint --init
+	借助eslint-loader和devServer里配置overlay: true
+13.提升webpack打包速度
+	1.跟上技术的迭代(Node, Npm, Yarn)
+	2.在尽可能少的模块上应用Loader
+	3.尽可能少的使用plugin，并且保证plugin的可靠性
+	4.resolve参数合理配置
+		resolve: {
+			extensions: ['.js', '.jsx']
+		},		//引入模块时，可以省略后缀
+14.自定义loader   --导出一个方法, 处理源代码，然后返回
+	比如异常捕获loader  
+	或者网站的国际化 根据语言环境打包生成不同的语言环境
+15.自定义plugin   --一个类 new WebpackPlugin();  在webpack打包的生命周期中进行一些操作
+	可以借助 debug: node --inspect --inspect-brk node_modules/webpack/bin/webpack.js   
+	npm run bebug  并打开谷歌浏览器的调试工具，点击node进入调试模式
+
+
+
+
+
+
+
+
+
+
+
+
+

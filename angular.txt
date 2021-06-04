@@ -1,0 +1,81 @@
+1.安装
+	cnpm install -g @angular/cli
+	ng v
+	ng new demo	 (--skip-install)	// 只安装环境，不安装依赖	
+		//创建完成后会安装模块，默认是npm，可以中止安装以后cnpm install来安装
+	安装完成后
+		ng server --open    ///启动项目
+2.目录结构
+	src下面是开发的代码
+	e2e是端到端的测试文件夹
+	app.component.spec.ts 是测试文件
+2.安装
+	1.组件
+		ng generate component components/news  //angular会自动引入该组件
+	2.服务
+		ng generate service services/storage
+		首先在根组件中引入并在provides里声明
+			import { StorageService } from './services/storage.service';  providers: [StorageService]
+			在组件中调用  import { StorageService } from '../../services/storage.service';
+				constructor(public storage: StorageService) {
+					console.log(this.storage.get());
+				}
+3.angular语法
+	绑定数据/属性   {{ picURL }}   [src]="picURL"
+	访问静态文件时可以直接写  src="assets/img/01.png"
+	for循环  <li *ngFor="let item of items"></li>
+	if判断 *ngIf="show"
+	switch判断 [ngSwitch]="orderNum"  *ngSwitchCase="1"  *ngSwitchDefault
+	[ngClass]="{'red':true, 'font18': true}"
+	[ngStyle]="{'color': 'red'}"
+	管道  {{ str | uppercase }} (过滤器)	
+	事件  <button (click)="divClick()">点击我</button>	
+		(keydown)="fn()"  (keyup)="fn()"
+	双向数据绑定：1.需要引入模块  import { FormsModule } from '@angular/forms'; 2.配置引入的模块 imports: [FormsModule]; 3.<input type="text" [(ngModel)]="textVal">{{ textVal }}
+4.生命周期
+	ngOnInit: 组件和指令j初始化完成，并不是真正的dom加载完成
+	ngAfterViewInit: 视图加载完成触发的事件，dom加载完成
+		可以通过引入ViewChild模块来操作dom节点, ViewChild也可以用来获取组件  定义时使用#(vue里是通过ref=""来定义)
+	ngDoCheck  ngAfterContentChecked   ngAfterViewChecked  当数据发生变化时会触发
+	ngOnDestory	销毁组件时触发
+5.组件通信
+	1.子组件获取父组件的属性和方法
+		<app-header [title]="title"></app-header>
+		子组件中引入Input模块   利用Input模块来获取传入的数据 @Input() title:any;
+		//这里可以传一个属性，也可以通过这种方式传入一个父组件的方法   [run]="run" @Input() run:any;   this.run();
+		//甚至可以将整个组件对象传入  [home]="this"  @Input() home:any; 
+	2.父组件获取子组件的属性和方法
+		直接借助ViewChild拿到子组件的对象
+	3.通过EventEmitter和Output来派发事件
+		@Output() public outer = new EventEmitter();   this.outer.emit('some string');
+		<app-footer (outer)="run($event)"></app-footer>   //这里的$event用来接收子组件传过来的值，必须写成$event
+6.使用RxJS来处理异步(callback,promise)
+	import { Observable } from 'rxjs';
+	return new Observable<any>((observer) => {
+      setTimeout(() => {
+        let username = 'rxjsData';
+        // observer.next(username);  //成功
+        observer.error('error');  //失败
+      }, 2000)
+    })
+	this.storage.getRxJSData().subscribe((data) => {
+      console.log(data);
+    })
+	
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+//问题
+1.[innerHTML]里添加class属性后，样式并未作用到页面上		
+	//angular为了安全问题默认把样式过滤掉了，可以通过引入一个可信任模块来解决该问题。

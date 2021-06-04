@@ -1,0 +1,145 @@
+React.js
+一、简介
+	1.起源于facebook 2013年
+	2.两个概念
+		·library：库	小而巧
+		·Framework：框架	大而全；提供了一整套的解决方案
+	3.三大框架
+		Angular.js 	最早  支持TS编程
+		Vue.js 	最火  文档友好
+		React.js	最流行
+	4.react和vue对比
+		模块化：从代码角度进行分析；把一些可复用的代码抽离成模块，便于项目维护和开发；
+		组件化：从UI界面角度进行分析；把一些可复用的UI元素，抽离成单独的组件；
+		Vue实现组件化方式：.vue template+script+style
+		React实现组件化方式：一切都是以js来表现的
+二、核心概念
+	1.虚拟DOM
+		DOM: 浏览器中的概念，用JS来表示页面的元素、并提供了操作DOM对象的API
+		虚拟DOM：框架里的概念，JS对象来模拟页面上的DOM元素；目的是为了实现DOM元素的高效更新 
+		var div = { tagName: 'div', attrs: [], childrens: [] }
+	2.diff算法：
+		tree diff: 新旧DOM树逐层对比的过程
+		component diff:	Tree Diff每一层组件级别的对比过程
+		element diff: 在Component Diff中两个组件类型相同时，再进行元素级别的对比
+三、项目中使用React
+	1.cnpm install react react-dom -S
+		react: 专门用于创建组件和虚拟DOM的，同时组件的生命周期都在这个包中  React.createElement();
+		react-dom：专门进行DOM操作的，最主要的应用场景，就是ReactDOM.render()
+	2.在js中混合写入类似于HTML的代码的语法，叫做 JSX 语法，符合 XML 规范的 JS
+		const div = <div>aaa</div>
+	3.配置babel
+		cnpm install babel-core babel-loader babel-plugin-transform-runtime --save-dev
+		cnpm install babel-preset-env babel-preset-stage-0 babel-preset-react --save-dev
+		.babelrc 
+			{
+				"presets": ["env", "stage-0", "react"],
+				"plugins": ["transform-runtime"]
+			}
+		webpack.config.js 	
+			rules: [
+				{ test: /\.js|jsx$/, use: 'babel-loader', exclude: /node_modules/ }
+			]
+四、react的语法
+	1.React中，需要把key加到被forEach、map或for循环直接控制的元素
+	2.为jsx中的元素添加class类名时，需要使用className来替代class，htmlFor来替代for属性(label)
+	3.在jsx创建dom的时候，所有的节点，必须有唯一的根元素进行包裹
+	4.标签必须成对出现，如果是单标签，则必须自闭合
+	5.组件：
+		vue 和 react 中的组件里的 props 都是只读的，不能修改  function Hello(props) {return <div>这是Hello组件</div>}
+		将组件抽离成单独的文件： export default function Hello() {return <div>Hello</div>}; 注意：创建组件需要用到 react 包
+		resolve: {		//引入组件时，可以省略后缀
+			extensions: ['.js', '.jsx']
+		},
+	6.基于 class 关键字创建组件：
+		class 组件名称 extends React.Component {
+			render() { return <div>合法的jsx 虚拟 dom 结构</div> }
+		}
+		在 class 组件的内部，this 表示当前的实例对象 可以通过 this.props 访问组件传过来的参数
+	7.两种创建组件方法的区别：
+		class 关键字创建的组件有自己的私有数据和生命周期函数
+		function 创建的组件没有自己的私有数据和生命周期函数
+		function 因为没有私有数据和生命周期函数，所以渲染效率会高一点
+	8.样式：
+		jsx 中的行内样式： style={{ color: 'red', fontSize: '25px' }}
+		在 css-loader 里通过 ? 来拼接 modules 表示开启 css 样式表的模块化；
+		css 模块化只针对 类选择器 ID选择器 生效，对于标签选择器不生效
+		使用 :local() 和 :global()
+			:lobal() 包裹的类名，是被模块化的类名 只能通过 className={cssObj.类名} 来使用	默认可以不写
+			:global() 包裹的类名，是全局生效的，不会被 css-modules 控制  通过 className="类名" 直接使用
+	9.为 state 数据重新赋值，不要使用 this.state.msg='123' 应该通过 this.setState({msg: '123'});
+		this.setState 这个方法只会更新提供的状态，不会覆盖原有的属性
+		this.setState 这个方法是异步执行的，通过回调函数来拿到修改后的值  this.setState({}, function() {console.log(this.state)});
+	10.React 中实现双向数据流绑定
+		value={this.state.msg} onChange
+	11.生命周期函数
+		this.defaultProps = {};  this.state = {};
+		-> componentWillMount		组件将要被挂载，此时还没有开始渲染 DOM	(等同于 vue 中 created 函数)
+		-> render		在内存中渲染虚拟 DOM 结构
+		-> componentDidMount	组件完成了挂载，组件显示到页面上 （等同于 vue 中的 mounted）
+		-> componentWillReceiveProps	组件接收新的属性
+		-> shouldComponentUpdate	组件是否需要被更新，组件尚未更新，但是 state 和 props 都是新的
+		-> compnentWillUpdate		组件需要被更新，尚未被更新，内存中的 DOM 还是旧的
+		-> render	重新渲染 DOM 树
+		-> componentDidUpdate	此时页面又被重新渲染，state 和 DOM 和页面上已经完全一致
+		-> componentWillUnmount		组件将要被卸载，此时组件还可以正常使用
+		从React版本16.3开始，以下组件生命周期方法正在逐步淘汰。
+			componentWillMount	componentWillReceiveProps	componentWillUpdate
+	12.组件中使用 props 传参
+		默认参数： static defaultProps = {}	
+		参数类型： static propTypes = {}
+		v15.x以后，需要通过安装第三方包 prop-types 来进行类型检测
+	13.绑定事件中的 this 并传参的方式
+		1.使用bind绑定this
+		2.在constructor中使用 bind 绑定 this 并将返回值重新赋给该方法
+		3.使用箭头函数改变 this 指向
+	14.React 中可以通过 props 来直接传递一个方法给子组件，相比于 VUE 的 this.$emit 更加方便
+	15.组件嵌套较多层数的时候：
+		在父组件上共享一个 context 对象，子孙组件不需要逐层传递数据了，直接通过 context 来获取
+		1.在父组件 中定义一个方法： getChildContext 并返回一个空对象 
+		2.通过 static childContextTypes 静态属性 定义共享给子组件的属性校验
+		3.子孙组件在使用时需要通过 contextTypes 先进行类型校验才可以获取到
+	16.React 中使用路由	react-router-dom
+		import { HashRouter, Route, Link } from 'react-router-dom'
+		<HashRouter>
+			<Link to="/home">首页</Link>&nbsp;&nbsp;
+			<Route path="/home" component={Home} exact	></Route>
+		</HashRouter>
+		·默认的路由匹配规则是模糊匹配，如果需要精确匹配，添加 exact 属性
+		·js 修改路由：this.props.history.push('/movie/comming_soon/1');
+		·使用路由中的 Switch 组件，能够指定如果前面的路由匹配上，则不再继续向下匹配
+	17.在项目中使用 AntDesign
+		1. cnpm install antd -S
+		2. import { DatePicker } from 'antd'; import 'antd/dist/antd.css';  <DatePicker></DatePicker>;
+		3. 样式文件太大，导致打包速度慢 
+			cnpm i babel-plugin-import -D
+			"plugins": ["transform-runtime", ["import", {"libraryName": "antd", "style": "css" }]]
+			此时可以不引入 css 文件 让插件自动导入所需的样式文件
+
+补充：
+	1.class的用法：
+		注意：在 class {} 的区间内，只能写 构造器、静态方法、静态属性、实例方法
+			  class 关键字内部还是用构造函数、原型链来实现的，所有可以将 class 关键字看做语法糖
+		继承： 如果一个子类通过 extends 关键字继承了父类，那么，在子类的 constructor 构造函数中，必须优先调用 super()
+			   super 其实就是父类中 constructor 构造器的一个引用
+			   在子类的构造器中，this 只能放在 super 之后使用
+	2.bind 和 call、apply 之间的区别
+		call、apply 修改完 this 指向后，会立即调用前面的函数，但是 bind 只是修改 this 指向，并不会调用
+		bind 的返回值是一个 被改变 this 指向后的函数的引用
+	
+问题记录：
+1.webpack4下devServer热更新速度慢，修改webpack.config.js mode模式为 development 后速度明显提升
+2.jsx 语法支持写script标签吗
+
+
+
+
+
+
+
+
+
+
+
+
+

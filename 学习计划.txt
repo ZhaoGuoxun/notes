@@ -1,0 +1,77 @@
+2021.3.28计划：
+	2.react项目实战 	//// 4.5 - 4.11 （一周）
+2021.4.15
+	1.面试总结+vue面试题+react面试题
+
+浏览器的兼容/适配
+
+性能优化
+js数据结构与算法
+
+react    72
+Redux
+reactNative
+react-hooks
+next.js
+
+vue
+	vue3.0
+	vue+ts
+	vite2.0
+	nuxt.js
+	vue项目实战
+	vue源码解析
+node
+	electron
+
+flutter
+uniapp
+Gatsby
+Taro
+
+***已学***
+	typescript + angular
+	sass
+	vue-cli  全家福  脚手架
+	koa
+	git
+	react
+	flex布局
+	grid布局
+	性能优化
+	浏览器的工作原理
+	手写promise		//// 4.12 - 4.15 (4天)
+	1.vue项目实战		//// 3.29 - 4.4（一周）
+
+
+books:
+	代码大全  
+	UNIX编程艺术
+	编程珠玑
+	算法导论
+	JavaScript 函数式编程
+	JavaScript设计模式
+	你不知道的javascript
+	算法第4版
+
+
+
+
+问题
+https的安全机制
+etag的生成算法
+js垃圾回收
+
+
+跨域问题 option是什么
+
+
+
+
+
+
+
+
+
+
+
