@@ -90,6 +90,10 @@ ref官方不建议大量使用
 1. 兄弟组件通信
 
    >  发布订阅者模式:  pubsubjs
+   >
+   >  ​	* 适用于任意组件间的通信
+   >
+   >  ​	* 要在组件的 componentWillUnmount 中取消订阅
 
 ## 生命周期函数
 
@@ -112,6 +116,49 @@ ref官方不建议大量使用
 	新增了 getDerivedStateFromProps  state完全取决于props
  		   getSnapshotBeforeUpdate 获取更新的快照,如滚动位置
 ```
+
+## React 路由
+
+1. SPA的理解
+   + single page web application
+   + 只有一个页面，点击链接不会刷新页面，只是局部更新
+   
+2. 路由的理解
+   + 一个路由就是一个映射关系（key:value）
+   + key为路径path，value 为 function（后端路由） 或 component（前端路由）
+   
+3. react-router
+   分为 web(react-router-dom)、native、any
+   
+4. react-router-dom 使用
+
+   ```jsx
+   import { Link, BrowserRouter } from 'react-router-dom'
+   <BrowserRouter><App /></BrowserRouter>	//需要用一个路由器来管理
+   <Link to="/home">Home</Link>	//相当于router-link
+   <Route path="/home" component={Home} />		//相当于router-view
+   ```
+
+   ```txt
+   路由组件this.props上有三个重要的属性
+   history:  go()  goBack()  goForward()  push()  replace()
+   location:  pathname  search  state
+   match:	params  path  url
+   ```
+
+   ```jsx
+   //Switch的使用
+   import {Switch, Route, Link } from 'react-router-dom'
+   <Switch>
+    	//路由匹配成功之后,不会继续向下匹配,提高了性能   
+      	<Route path="/home" component={Home1} />
+      	<Route path="/home" component={Home2} />
+   </Switch>
+   ```
+
+   
+
+
 
 ## React脚手架
 
@@ -158,4 +205,29 @@ ref官方不建议大量使用
       }
   ```
 
-  ****
++ fetch
+
+  ```txt
+  fetch 原生函数，不再使用 XMLHTTPRequest发送ajax请求
+  但是老版本浏览器可能不兼容
+  关注分离的设计思想
+  
+  fetch(url,options).then(response => response.json())
+  	.then(data => console.log(data))
+  	.catch(err => console.log(err))
+  ```
+
+- react 中插槽的用法
+
+  ```txt
+  react中没有vue中类似的插槽的概念，但是react将标签中间的内容放在了 this.props.children 属性上，可以在children上获取内容，也可以将children属性直接放在组件上，同样会展示出来
+  ```
+
+- pubic_url
+
+  ```txt
+  %PUBLIC_URL%  表示 public 文件夹所在的绝对路径
+  ```
+
+  
+
