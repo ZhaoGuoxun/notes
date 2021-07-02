@@ -136,16 +136,18 @@ ref官方不建议大量使用
    import { Link, BrowserRouter } from 'react-router-dom'
    <BrowserRouter><App /></BrowserRouter>	//需要用一个路由器来管理
    <Link to="/home">Home</Link>	//相当于router-link
+   	Link 和 NavLink： NavLink 会自动加上 active 类，高亮效果
    <Route path="/home" component={Home} />		//相当于router-view
+   	exact：开启严格匹配，会导致二级路由丢失的问题
    ```
-
+   
    ```txt
    路由组件this.props上有三个重要的属性
    history:  go()  goBack()  goForward()  push()  replace()
    location:  pathname  search  state
    match:	params  path  url
    ```
-
+   
    ```jsx
    //Switch的使用
    import {Switch, Route, Link } from 'react-router-dom'
@@ -155,7 +157,7 @@ ref官方不建议大量使用
       	<Route path="/home" component={Home2} />
    </Switch>
    ```
-
+   
    
 
 
