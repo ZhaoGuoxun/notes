@@ -119,48 +119,112 @@ ref官方不建议大量使用
 
 ## React 路由
 
-1. SPA的理解
-   + single page web application
-   + 只有一个页面，点击链接不会刷新页面，只是局部更新
-   
-2. 路由的理解
-   + 一个路由就是一个映射关系（key:value）
-   + key为路径path，value 为 function（后端路由） 或 component（前端路由）
-   
-3. react-router
-   分为 web(react-router-dom)、native、any
-   
-4. react-router-dom 使用
+### 1. SPA的理解
 
-   ```jsx
-   import { Link, BrowserRouter } from 'react-router-dom'
-   <BrowserRouter><App /></BrowserRouter>	//需要用一个路由器来管理
-   <Link to="/home">Home</Link>	//相当于router-link
-   	Link 和 NavLink： NavLink 会自动加上 active 类，高亮效果
-   <Route path="/home" component={Home} />		//相当于router-view
-   	exact：开启严格匹配，会导致二级路由丢失的问题
-   ```
-   
-   ```txt
-   路由组件this.props上有三个重要的属性
-   history:  go()  goBack()  goForward()  push()  replace()
-   location:  pathname  search  state
-   match:	params  path  url
-   ```
-   
-   ```jsx
-   //Switch的使用
-   import {Switch, Route, Link } from 'react-router-dom'
-   <Switch>
-    	//路由匹配成功之后,不会继续向下匹配,提高了性能   
-      	<Route path="/home" component={Home1} />
-      	<Route path="/home" component={Home2} />
-   </Switch>
-   ```
-   
-   
++ single page web application
++ 只有一个页面，点击链接不会刷新页面，只是局部更新
 
+### 2. 路由的理解
 
++ 一个路由就是一个映射关系（key:value）
++ key为路径path，value 为 function（后端路由） 或 component（前端路由）
+
+### 3. react-router
+
+​	分为 web(react-router-dom)、native、any
+
+#### 1. react-router-dom 使用
+
+```jsx
+import { Link, BrowserRouter } from 'react-router-dom'
+<BrowserRouter><App /></BrowserRouter>	//需要用一个路由器来管理
+<Link to="/home">Home</Link>	//相当于router-link
+	Link 和 NavLink： NavLink 会自动加上 active 类，高亮效果
+<Route path="/home" component={Home} />		//相当于router-view
+	exact：开启严格匹配，会导致二级路由丢失的问题
+```
+
+```txt
+路由组件this.props上有三个重要的属性
+history:  go()  goBack()  goForward()  push()  replace()
+location:  pathname  search  state
+match:	params  path  url
+```
+
+```jsx
+//Switch的使用
+import {Switch, Route, Link } from 'react-router-dom'
+<Switch>
+ 	//路由匹配成功之后,不会继续向下匹配,提高了性能   
+   	<Route path="/home" component={Home1} />
+   	<Route path="/home" component={Home2} />
+</Switch>
+```
+
+#### 2. 路由传参
+
+```txt
+1. params参数
+	<Route path="/home/message/:id">
+	<Link to="/home/message/1">
+	this.props.match.params
+2. search参数
+  <Link to="/message?name=zgx&age=19" />	
+  this.props.location.search
+  借助 query-string 库来parse(解析) 成对象
+3. state参数
+	<Link to={{pathname: '/home/message', state: {name: 'zgx', age: 10}}} />
+	this.props.location.state
+```
+
+#### 3. 路由跳转模式
+
+```txt
+<Link redirect >   //redirect模式 push模式
+```
+
+#### 4. withRouter
+
+```txt
+this.props.history 只在路由组件中有,在一般的路由中没有这个属性
+通过 export default withRouter(Navigate) 来包装组件,使其具有路由的api
+```
+
+#### 5. BrowserRouter 和 HashRouter 的区别:
+
+```txt
+1. browserRouter 使用后h5新提出的 history API,不兼容IE9一下的内容
+2. hashRouter刷新后会导致路由的state参数丢失,browserRouter不会,因为state是保存在history对象里面
+```
+
+## React中使用antd
+
+### 高级配置
+
+1. 修改主题  借助carco实现,具体见官方文档
+
+2. 按需引入antd的样式文件
+   https://blog.csdn.net/qq_52135740/article/details/116649756
+
+   ```js
+   yarn add babel-plugin-import @babel/plugin-proposal-decorators
+   //在craco.config.js文件下的module.exports添加如下代码
+    babel:{  
+       plugins: [
+         ["@babel/plugin-proposal-decorators", { legacy: true }],
+         [   
+           "import", 
+           {
+             "libraryName": "antd",
+             "libraryDirectory": "es",
+              "style": true //设置为true即是less
+            }
+         ]
+       ]
+    },
+   ```
+
+   
 
 ## React脚手架
 
@@ -175,6 +239,20 @@ ref官方不建议大量使用
 2. `create-react-app hello-react`
 3. `cd hello-react`
 4. `npm run start`
+
+## Redux
+
+#### 1. 简介
+
+> redux是一个专门用于状态管理的js库
+>
+> 可以用在react,angular,vue等项目中,但基本与react配置使用
+>
+> 作用: 集中式管理 react 应用中多个组件共享的状态
+
+#### 2. redux原理
+
+![redux原理图](./redux原理图.jpg)
 
 
 
