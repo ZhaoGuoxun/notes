@@ -224,21 +224,7 @@ this.props.history 只在路由组件中有,在一般的路由中没有这个属
     },
    ```
 
-   
 
-## React脚手架
-
-### 脚手架介绍
-
-1. 技术架构: react + webpack + es6 + eslint
-2. 特点: 模块化 组件化 工程化
-
-### 脚手架使用
-
-1. `npm i -g create-react-app`
-2. `create-react-app hello-react`
-3. `cd hello-react`
-4. `npm run start`
 
 ## Redux
 
@@ -253,6 +239,34 @@ this.props.history 只在路由组件中有,在一般的路由中没有这个属
 #### 2. redux原理
 
 ![redux原理图](./redux原理图.jpg)
+
+#### 3. redux 精简版
+
+```txt
+1. 创建 store.js 用于管理状态  import { createStote } from 'redux'
+2. 创建 countReducer 用于处理状态的改变: reducer本质是一个函数，接受两个参数，之前的状态，动作对象
+3. 页面展示通过  store.getState();
+4. 监听 store 的变化，并且刷新页面 componentDidMount: store.subscribe(() => { this.setState() })
+	或者在 index.js 中 store.subscribe(() => { ReactDOM.render(<App />, document.getElementById('root')) })
+```
+
+
+
+
+
+## React脚手架
+
+### 脚手架介绍
+
+1. 技术架构: react + webpack + es6 + eslint
+2. 特点: 模块化 组件化 工程化
+
+### 脚手架使用
+
+1. `npm i -g create-react-app`
+2. `create-react-app hello-react`
+3. `cd hello-react`
+4. `npm run start`
 
 
 
