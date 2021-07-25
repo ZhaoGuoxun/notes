@@ -250,6 +250,104 @@ this.props.history 只在路由组件中有,在一般的路由中没有这个属
 	或者在 index.js 中 store.subscribe(() => { ReactDOM.render(<App />, document.getElementById('root')) })
 ```
 
+#### 4. redux完整版
+
+```text
+增加了两个文件: 
+	1. count_action.js  专门用于创建action对象
+		export const createIncrementAction = data => ({ type: INCREMENT, data })
+	2. constant.js  防止编码错误,定义常量
+		export const INCREMENT = 'increment';
+```
+
+#### 5. 异步action
+
+```txt
+借助中间件实现
+	1. yarn add redux-thunk; 
+	   import thunk from 'redux-thunk';  
+	   import {applyMiddleWare} from 'redux'; 
+	   createStore(countReducer, applyMiddleWare(thunk))
+	2. const asyncAction = (data, time) => {
+			return (dispatch) => {
+				setTimeout(() => dispatch(action, data), time)
+			}
+	   }
+```
+
+#### 6. 使用react-redux
+
+```txt
+在之前的基础上,增加容器组件和UI组件,UI组件负责与页面的渲染与逻辑处理,通过props与容器组件交互;容器组件是UI组件的父组件,负责与redux交互
+containers/Count/index.jsx:
+	1. import {connect} from 'react-redux';  export default connect(mapStateToProps, mapDispatchToProps)(CountUI);
+	2. const mapStateToProps = state => { return { count: state } }
+	3. const mapDispatchToProps = dispatch => { return { increment: value => dispatch(createIncrementAction(value)) } }
+	4. mapStateToProps是一个函数,返回状态; mapDispatchToProps返回操作状态的方法
+```
+
+#### 7. react-redux的优化
+
+```txt
+export default connect(
+  state => ({ count: state }),
+  {			//mapDispatchToProps 可以是一个对象
+    increment: createIncrementAction,		//react-redux会自动调用 dispatch
+  }
+)(CountUI)
+```
+
+```txt
+可以不用在index.js中监测redux状态的改变,react-redux已经做了监测
+```
+
+```txt
+借助 provider 组件可以给所有需要用到store的组件注入store
+import {Provider} from 'react-redux'
+<Provider store={store}><App /></Provider>
+```
+
+```txt
+将容器组件和UI组件合并到一个jsx文件中
+```
+
+#### 8. react-redux数据共享
+
+```txt
+redux/actions/Count  redux/actions/Person
+redux/reducers/Count  redux/reducers/Person
+store.js  	import {combineReducers} from 'redux'
+createStore(combineReducers({ count: countReducer, person: personReducer }))
+在容器组件中:  state: {count: state.count, person: state.person}
+```
+
+#### 9. 纯函数
+
+```txt
+只要是同样的输入,必须得到同样的输出
+必须遵守以下规则:
+	不得改写数据
+	不会产生任何副作用,例如网络请求,输入和输出设备
+	不能调用 Date.now() 或 Math.random() 等方法
+redux 中的 reducer 必须是一个纯函数
+	reducer中: 返回必须是一个不同于preState的对象或值,因此不能使用 unshift 返回 preState
+```
+
+#### 10. 使用redux-devtools查看redux状态管理
+
+```txt
+1. yarn add redux-devtools-extension
+2. import { composeWithDevTools } from 'redux-devtools-extension'
+3. createStore(countReducer, composeWithDevTools(applyMiddleWare(thunk)))
+```
+
+#### 11. redux最终版
+
+```txt
+1. 简化名称,使用对象简写的方式
+2. 新增 redux/reducers/index.js, 整合暴露所有的 reducer
+```
+
 
 
 
