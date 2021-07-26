@@ -368,6 +368,31 @@ redux 中的 reducer 必须是一个纯函数
 
 
 
+## React扩展
+
+### 1. setState
+
+```txt
+1. 对象式的 setState
+	this.setState({count: 99})
+2. 函数式的 setState
+	this.setState((state, props) => {
+		return {count: state.count + 1}
+	})
+3. 当修改的对象依赖于之前的状态时,推荐用函数式的 setState, 可以在setState的第二个参数(回调函数)中获取更新后的值(因为是异步更新)
+```
+
+### 2. 路由懒加载 lazyLoad
+
+```txt
+1. import {lazy, Suspense} from 'react'; 
+   import Loading from './components/Loading'
+2. const Home = (() => import('./Home'))
+3. <Suspense fallback={ Loading }><Route path="/home" component={Home} /></Suspense>
+```
+
+
+
 # 补充:
 
 + react项目中使用css模块化
