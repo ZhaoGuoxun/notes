@@ -391,6 +391,27 @@ redux 中的 reducer 必须是一个纯函数
 3. <Suspense fallback={ Loading }><Route path="/home" component={Home} /></Suspense>
 ```
 
+### 3. Hooks
+
+#### 1.React Hook/Hooks 是什么
+
+```txt
+1. Hook 是 react 16.8版本增加的新特性/新语法
+2. 可以让你在函数式组件中使用 state 以及其他的 React 特性
+```
+
+#### 2. 三个常用的 Hook
+
+```;txt
+1. State Hook: React.useState
+	(1).State Hook 让函数组件也可以有state状态,并进行状态数据的读写操作
+	(2).语法: const [name, setName] = React.useState('tom')
+	(3).useState的参数为初始值,会在内部作缓存;返回一个状态值和更新状态值的函数的数组
+	(4).setName有两种写法: setName(newValue);  setName(value => newValue);
+```
+
+
+
 
 
 # 补充:
