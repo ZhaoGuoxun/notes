@@ -410,6 +410,40 @@ redux 中的 reducer 必须是一个纯函数
 	(4).setName有两种写法: setName(newValue);  setName(value => newValue);
 ```
 
+```txt
+2. Effect Hook: React.useEffect
+	(1).Effect Hook 让函数组件中也可以执行副作用操作(用于模拟类组件中的生命周期钩子)
+	(2).React中的副作用操作:
+		发送Ajax请求获取数据
+		设置订阅 / 启动定时器
+		手动更改真实DOM
+	(3).语法:
+		useEffect(() => {
+			// 在此可以执行任何带副作用操作
+			// 返回一个函数 相当于 componentWillUnmount
+			return () => {}
+		}, [stateValue]) //如果指定的是[], 回调函数只会在第一次render()后执行
+	(4).可以把 useEffect Hook 看成如下三个函数的组合
+		componentDidMount()
+		componentDidUpdate()
+		componentWillUnmount()
+```
+
+```txt
+3. Ref Hook
+	(1).Ref Hook可以在函数组件中存储/查找组件内的标签或任意其他数据
+	(2).const refContainer = useRef()
+	(3).作用: 保存标签对象,功能与React.createRef()一样
+```
+
+### 4. Fragment
+
+```txt
+import {Frament} from 'react'
+Fragment相当于vue中的template,可以且仅可以写key值
+<></>空标签同样不会渲染,区别在于<>不能写任何属性值
+```
+
 
 
 
