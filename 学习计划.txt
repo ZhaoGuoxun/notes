@@ -1,19 +1,26 @@
-2021.3.28计划：
-	2.react项目实战 	//// 4.5 - 4.11 （一周）
-2021.4.15
-	1.面试总结+vue面试题+react面试题
+8.1 
+	typescript
+	Vue3.0 
+	Vue3+vite项目实战
+	React项目实战
+	React Native项目实战
+	
+	Vue源码
+	React源码
+	
+	数据结构与算法
+	计算机网络基础
+	
+	nodejs
+	Flutter
+	
+	
 
 浏览器的兼容/适配
-
 性能优化
 js数据结构与算法
-
-react    72
-Redux
 reactNative
-react-hooks
 next.js
-
 vue
 	vue3.0
 	vue+ts
@@ -23,9 +30,7 @@ vue
 	vue源码解析
 node
 	electron
-
 flutter
-uniapp
 Gatsby
 Taro
 
@@ -42,6 +47,10 @@ Taro
 	浏览器的工作原理
 	手写promise		//// 4.12 - 4.15 (4天)
 	1.vue项目实战		//// 3.29 - 4.4（一周）
+	react 
+	Redux
+	react-hooks
+	uniapp
 
 
 books:

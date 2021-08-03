@@ -348,6 +348,14 @@ redux 中的 reducer 必须是一个纯函数
 2. 新增 redux/reducers/index.js, 整合暴露所有的 reducer
 ```
 
+#### 问题
+
+```
+使用redux中遇到的问题:
+	添加一个用户时,会将count的值置为0
+	在调用 person reducers 时,会同时调用 count reducers,返回的应该是 preState,而不是initState 
+```
+
 
 
 
@@ -442,6 +450,72 @@ redux 中的 reducer 必须是一个纯函数
 import {Frament} from 'react'
 Fragment相当于vue中的template,可以且仅可以写key值
 <></>空标签同样不会渲染,区别在于<>不能写任何属性值
+```
+
+### 5. Context
+
+```txt
+1. 在类组件中使用context来给后代组件通过this.context来传递参数
+	const MyContext = React.createContext();
+	<MyContext.Provider value={{username: 'zgx', age: 10}}><Child /></MyContext.Provider>
+	Child: static contextType = MyContext; 
+		   render() { console.log(this.context) }
+2. 类组件和函数式组件都可以使用:
+	Child: <MyContext.Consumer>{value => {console.log(value)}}</MyContext.Consumer>
+**项目中一般不用,常用redux
+```
+
+### 6. 组件优化
+
+```
+Component的2个问题
+	1. 只要执行 setState() 即使不改变状态数据,组件也会重新 render()
+	2. 只要当前组件重新 render(),就会自动重新 render 子组件 ==> 效率低
+原因: component中的shouldComponentUpdate()总是返回true
+解决:
+	1. 重写shouldComponentUpdate(nextProps, nextState){}
+	2. import {PureComponent} from 'react'
+	   PureComponent重写了shouldComponentUpdate()只有state或props发生变化了才会更新
+	   注意: 只是金鑫state和Props的浅比较,如果只是内部数据变化了,而对象本身还是指向之前的地址是不会发生更新的,所以不要直接修改state数据,而是产生新的数据
+**项目中一般使用PureComponent来优化
+```
+
+### 7. render Props
+
+```
+类似于vue组件中的slot,具名插槽
+Parent  <A render={name => <B name={name} /> } />
+  -A	state = {name: 'zgx'};  {this.props.render()}
+    -B   {this.props.name}
+```
+
+### 8. 错误边界
+
+```
+用来捕获后代组件错误,渲染出备用页面
+只能捕获后代组件生命周期产生的错误,不能捕获自己组件产生的错误和其他组件在合成事件/定时器中产生的错误
+static getDerivedStateFromError(error) { return { renderError: true } }
+componentDidCatch(error, info)  常用于统计页面的错误
+只在生产环境下有效,开发环境中无效
+```
+
+### 9. 组件间的通信方式
+
+* 父子组件/兄弟组件/祖孙组件
+
+```
+1. props
+	children Props   /   render Props
+2. 消息订阅-发布
+	pubsub / event 等模块
+3. 集中式管理
+	redux / dva 等等
+4. context: 
+	生产者-消费者模式
+比较好的搭配方式:
+	父子组件: props
+	兄弟组件: 消息订阅发布/集中式管理
+	祖孙组件: 消息订阅发布/集中式管理/context(开发中用的少,封装组件用的多)
 ```
 
 
