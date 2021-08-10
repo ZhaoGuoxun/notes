@@ -130,16 +130,46 @@ npm i -D @babel/core @babel/preset-env babel-loader core-js
     loader: "babel-loader",
     options: {
 	    presets: [
-            "@babel/preset-env",
-            {
-                targets: {
-                    chrome: "88"
-                },
-                corejs: "3",
-                useBuiltIns: "usage"  //按需加载
-            }
+           [
+                "@babel/preset-env",
+                {
+                    targets: {
+                        chrome: "88"
+                    },
+                    corejs: "3",
+                    useBuiltIns: "usage"  //按需加载
+                }
+           ]
         ]
     }
 },
 ```
 
+## 6. 类
+
++ 抽象类,抽象方法
+
++ 类结构
+
+  + type
+  + interface
+
+  ```txt
+  区别:
+  	1. type可以声明 基本类型，联合类型，元组 的别名，interface不行
+  		type Pet = Dog | Cat
+  	2. type 语句中可以使用 typeof 获取类型实例
+  		type B = typeof div
+  	3. type 支持类型映射，interface不支持
+  		type Keys = "firstname" | "surname"
+          type DudeType = {
+            [key in Keys]: string
+          }
+          const test: DudeType = {
+            firstname: "Pawel",
+            surname: "Grzybek"
+          }
+  	4. interface能够声明合并，type不能
+  ```
+
+  

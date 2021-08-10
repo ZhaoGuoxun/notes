@@ -18,14 +18,20 @@ module.exports = {
             loader: "babel-loader",
             options: {
               presets: [
-                "@babel/preset-env",
-                {
-                  targets: {
-                    chrome: "88"
-                  },
-                  corejs: "3",
-                  useBuiltIns: "usage"  //按需加载
-                }
+                [
+                  "@babel/preset-env",
+                  {
+                    // 要兼容的目标浏览器及版本
+                    targets: {
+                      "chrome": "58",
+                      "ie": "11"
+                    },
+                    //指定corejs的版本（根据package.json中的版本，只写整数）
+                    "corejs": "3",
+                    //使用corejs的方式 "usage"  表示按需加载
+                    "useBuiltIns": "usage"
+                  }
+                ]
               ]
             }
           },
