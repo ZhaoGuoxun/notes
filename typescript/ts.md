@@ -152,8 +152,11 @@ npm i -D @babel/core @babel/preset-env babel-loader core-js
 + 类结构
 
   + type
-  + interface
-
+  
++ interface  接口  定义类的属性和方法
+  
+    > 一个类可以通过implements实现一个接口 
+  
   ```txt
   区别:
   	1. type可以声明 基本类型，联合类型，元组 的别名，interface不行
@@ -168,8 +171,8 @@ npm i -D @babel/core @babel/preset-env babel-loader core-js
           const test: DudeType = {
             firstname: "Pawel",
             surname: "Grzybek"
-          }
+        }
   	4. interface能够声明合并，type不能
   ```
-
+  
   
