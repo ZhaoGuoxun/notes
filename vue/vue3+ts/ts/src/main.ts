@@ -1,80 +1,71 @@
-// console.log('hello ts')
-
-// let und: undefined = undefined
-// // let a: number = und;
-// // console.log(a);
-
-// let arr: Array<number | string> = [1, 2, 'abc']
-// console.log(arr);
-
-// // let vd:void = undefined
-// // console.log(vd);
-
-// interface IPerson {
-//   name: string,
-//   age?: number,
-//   readonly address: string
+// abstract class animal {
+//   name: string = 'ddd'
 // }
 
-// const person: IPerson = {
-//   name: 'zgx',
-//   address: 'nanjing',
-//   age: 1
+// class Dog extends animal {
+//   speak() {
+//     console.log(this.name);
+//   }
 // }
-// // person.address = 'dfa'
-// console.log(person)
 
-// // class Person implements IPerson {
-// //   name: string
-// //   age?: number
-// //   address: string
 
-// //   constructor() {
-// //     this.name = 'zzz'
-// //     // this.age = 10
-// //     this.address = ''
-// //   }
+// const a = new Dog()
+// console.log(a);
+
+
+// const fn: (a: number) => number = (a: number): number => {
+//   return a
+// }
+
+// // console.log(fn(1));
+
+
+// // function add(x: number | string, y: number | string) {
+// //   return x + y
 // // }
 
-// interface ISearch {
-//   (source: string, target: string): boolean
+// // ∥/函数重载声明
+// function add(x: string, y: string): string
+// function add(x: number, y: number): number
+// // ∥/函数声明
+// function add(x: string | number, y: string | number): string | number {
+//   if (typeof x === 'string' && typeof y == 'string') {
+//     return x + y//字符串拼接
+//   }
+//   else if (typeof x == 'number' && typeof y == 'number') {
+//     return x + y//数字相加
+//   } else {
+//     return <string>x + y
+//   }
 // }
+// // ∥/函数调用 两个参数都是字符串
+// console.log(add('诸葛', '孔明'))
+// // / 两个参数都是数字
+// console.log(add(10, 20))
+// // / 此时如果传入的是非法的数据, ts应该给我提示出错误的信息内容, 报红色错误的信息
+// // console.log(add('真香', 10))
+// // console.log(add(100, '真好'))
 
-// const queryString = function (source: string, target: string): boolean {
-//   return source.search(target) > -1
-// }
-
-// class A {
-
-// }
-// class B {
-
-// }
-
-// // class C extends A implements IPerson {
-
-// // }
-
-
-class Person {
-  protected name: string
-  constructor(name: string) {
-    this.name = 'person'
-  }
+function test<User>(a: User): User {
+  return a
 }
 
-class Student extends Person {
-  // public name: string
-  // constructor(name: string) {
-  //   super(name)
-  //   // this.name = name
-  // }
-  speak() {
-    console.log(this.name);
-  }
+console.log(test(1));
+
+
+interface IBaseCRUD<T> {
+  data: Array<T>
+  add: (t: T) => T
+  getByID: (id: number) => T
 }
 
-const s = new Student('ddd');
-console.log(s);
+interface ILength {
+  length: number
+}
+function t1<T extends ILength>(x: T): number {
+  return x.length
+}
 
-// console.log((s as object).__proto__)
+// t1('dfa')
+// t1([])
+// t1(123)
